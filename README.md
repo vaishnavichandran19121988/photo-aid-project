@@ -14,11 +14,7 @@ An example application built with dart_frog
 
 Absolutely bro — here’s a clean and professional **`README.md`** template you can directly paste on GitHub 💯
 
----
 
-## 📄 `README.md` (copy this into GitHub)
-
-```markdown
 # 📸 Photo Aid App
 
 **Photo Aid** is a full-stack Flutter + Dart backend application designed to connect users in need of help (Requesters) with those offering assistance (Helpers). It features live chat, map-based requests, user profiles, ratings, and more.
