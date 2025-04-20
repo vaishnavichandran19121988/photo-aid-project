@@ -1,8 +1,0 @@
-CREATE TABLE IF NOT EXISTS chats (
-  id SERIAL PRIMARY KEY,
-  session_id INTEGER NOT NULL REFERENCES sessions(id) ON DELETE CASCADE,
-  sender_id INTEGER NOT NULL REFERENCES users(id),
-  receiver_id INTEGER NOT NULL REFERENCES users(id),
-  message TEXT NOT NULL,
-  sent_at TIMESTAMP DEFAULT NOW()
-);
