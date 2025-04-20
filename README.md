@@ -12,7 +12,7 @@ An example application built with dart_frog
 [very_good_analysis_link]: https://pub.dev/packages/very_good_analysis
 
 
-Absolutely bro — here’s a clean and professional **`README.md`** template you can directly paste on GitHub 💯
+
 
 
 # 📸 Photo Aid App
