@@ -35,25 +35,56 @@ USE_CONNECTION_POOL=false
 USE_CONNECTION_POOL=true
 ```
 
-## API Usage
+## Middleware Integration
 
-Regardless of which connection strategy is used, your code always uses the `withDb()` function to execute database operations:
+This project uses middleware to integrate the database connection with Dart Frog's request handling flow:
+
+1. `lib/middleware/db_middleware.dart` - Provides database access to route handlers
+2. `routes/_middleware.dart` - Applies the database middleware to all routes
+
+The middleware makes the database available through a convenient extension method on `RequestContext`:
 
 ```dart
-Future<List<User>> getAllUsers() async {
-  return withDb((conn) async {
-    final result = await conn.execute('SELECT * FROM users');
-    return result.map((row) => User.fromRow(row)).toList();
+// Inside any route handler:
+final users = await context.db.execute((conn) async {
+  final result = await conn.execute('SELECT * FROM users');
+  return result.toList();
+});
+```
+
+## Example Usage in Route Handlers
+
+Here's how to use the database connection in your route handlers:
+
+```dart
+Future<Response> onRequest(RequestContext context) async {
+  // Query the database
+  final users = await context.db.execute((conn) async {
+    final result = await conn.execute('SELECT id, name FROM users');
+    return result.map((row) => {'id': row[0], 'name': row[1]}).toList();
   });
+
+  // Return the result as JSON
+  return Response.json(body: {'users': users});
 }
 ```
 
-This ensures that you can easily switch between development and production modes without changing your application code.
-
-## Closing Connections
+## Application Shutdown
 
 When shutting down the application, always call `closeDbConnections()` to properly close all database connections:
 
 ```dart
+// In your application shutdown code:
 await closeDbConnections();
 ```
+
+## Database Schema Migrations
+
+Before running the application, make sure to apply all database migrations:
+
+```bash
+# From the backend directory
+dart run bin/migrate.dart
+```
+
+The migration scripts are located in the `backend/migrations/` directory.
