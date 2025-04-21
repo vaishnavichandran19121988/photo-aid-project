@@ -32,20 +32,18 @@ final Pool<Connection>? _connectionPool = useConnectionPool
 
 /// Gets or creates the singleton connection.
 Future<Connection> _getSingletonConnection() async {
-  if (_singletonConnection == null) {
-    _singletonConnection = await Connection.open(
-      Endpoint(
-        host: _env['DB_HOST']!,
-        port: int.parse(_env['DB_PORT']!),
-        database: _env['DB_NAME']!,
-        username: _env['DB_USER']!,
-        password: _env['DB_PASSWORD']!,
-      ),
-      settings: const ConnectionSettings(
-        sslMode: SslMode.disable,
-      ),
-    );
-  }
+  _singletonConnection ??= await Connection.open(
+    Endpoint(
+      host: _env['DB_HOST']!,
+      port: int.parse(_env['DB_PORT']!),
+      database: _env['DB_NAME']!,
+      username: _env['DB_USER']!,
+      password: _env['DB_PASSWORD']!,
+    ),
+    settings: const ConnectionSettings(
+      sslMode: SslMode.disable,
+    ),
+  );
   return _singletonConnection!;
 }
 
