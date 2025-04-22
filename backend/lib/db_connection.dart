@@ -19,8 +19,8 @@ final Pool<Connection>? _connectionPool = useConnectionPool
             host: _env['DB_HOST']!,
             port: int.parse(_env['DB_PORT']!),
             database: _env['DB_NAME']!,
-            username: _env['DB_USER']!,
-            password: _env['DB_PASSWORD']!,
+            username: _env['DB_USER'],
+            password: _env['DB_PASSWORD'],
           ),
         ],
         settings: const PoolSettings(
@@ -37,8 +37,8 @@ Future<Connection> _getSingletonConnection() async {
       host: _env['DB_HOST']!,
       port: int.parse(_env['DB_PORT']!),
       database: _env['DB_NAME']!,
-      username: _env['DB_USER']!,
-      password: _env['DB_PASSWORD']!,
+      username: _env['DB_USER'],
+      password: _env['DB_PASSWORD'],
     ),
     settings: const ConnectionSettings(
       sslMode: SslMode.disable,

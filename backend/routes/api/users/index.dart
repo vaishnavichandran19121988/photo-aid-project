@@ -1,78 +1,61 @@
 import 'dart:io';
-
 import 'package:dart_frog/dart_frog.dart';
-import 'package:postgres/postgres.dart';
-import 'package:backend/middleware/db_middleware.dart';
+import 'package:backend/repositories/user_repository.dart';
 
-/// GET /api/users - Get all users
-/// POST /api/users - Create a new user
 Future<Response> onRequest(RequestContext context) async {
   switch (context.request.method) {
     case HttpMethod.get:
-      return _onGetUsers(context);
+      return onGet(context);
     case HttpMethod.post:
-      return _onCreateUser(context);
+      return onPost(context);
     default:
       return Response(statusCode: HttpStatus.methodNotAllowed);
   }
 }
 
-/// Handle GET /api/users
-Future<Response> _onGetUsers(RequestContext context) async {
+/// GET /api/users
+Future<Response> onGet(RequestContext context) async {
+  final repo = UserRepository(() => context.read());
   try {
-    // Use the database to fetch users
-    final users = await context.db.execute((conn) async {
-      final result = await conn.execute('SELECT id, name, email FROM users');
-      return result.map((row) {
-        return {
-          'id': row[0],
-          'name': row[1],
-          'email': row[2],
-        };
-      }).toList();
-    });
-
-    return Response.json(body: {'users': users});
+    final users = await repo.fetchAll();
+    // map models to JSON
+    final data = users.map((u) => u.toJson()).toList();
+    return Response.json(body: {'users': data});
   } catch (e) {
+    print('Error fetching users: \$e\n\$st');
     return Response.json(
       statusCode: HttpStatus.internalServerError,
-      body: {'error': 'Failed to fetch users: ${e.toString()}'},
+      body: {'error': 'Server error fetching users'},
     );
   }
 }
 
-/// Handle POST /api/users
-Future<Response> _onCreateUser(RequestContext context) async {
+/// POST /api/users
+Future<Response> onPost(RequestContext context) async {
+  // 1️ Parse and validate body
+  final body = await context.request.json() as Map<String, dynamic>;
+  final name = (body['name'] as String?)?.trim();
+  final email = (body['email'] as String?)?.trim();
+  if (name == null || name.isEmpty || email == null || email.isEmpty) {
+    return Response.json(
+      statusCode: HttpStatus.badRequest,
+      body: {'error': 'Missing or empty name/email'},
+    );
+  }
+
+  // 2️ Create user
+  final repo = UserRepository(() => context.read());
   try {
-    // Parse the request body
-    final body = await context.request.json() as Map<String, dynamic>;
-    final name = body['name'] as String?;
-    final email = body['email'] as String?;
-
-    if (name == null || email == null) {
-      return Response.json(
-        statusCode: HttpStatus.badRequest,
-        body: {'error': 'Missing required fields: name, email'},
-      );
-    }
-
-    // Use the database to create a user
-    final userId = await context.db.execute((conn) async {
-      final result = await conn.execute(
-        'INSERT INTO users (name, email) VALUES (@name, @email) RETURNING id',
-        parameters: {'name': name, 'email': email},
-      );
-      return result[0][0];
-    });
-
+    final newId = await repo.create(name, email);
     return Response.json(
       statusCode: HttpStatus.created,
-      body: {'id': userId, 'name': name, 'email': email},
+      body: {'id': newId, 'name': name, 'email': email},
     );
   } catch (e) {
+    print('Error creating user: \$e\n\$st');
     return Response.json(
       statusCode: HttpStatus.internalServerError,
-      body: {'error': 'Failed to create user: ${e.toString()}'},
+      body: {'error': 'Server error creating user'},
     );
   }
 }

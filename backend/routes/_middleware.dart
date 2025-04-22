@@ -1,5 +1,5 @@
+import 'package:backend/middleware/db_middleware.dart';
 import 'package:dart_frog/dart_frog.dart';
-import '../lib/middleware/db_middleware.dart';
 
 /// Application-level middleware stack
 ///
