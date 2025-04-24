@@ -71,3 +71,5 @@ Future<void> closeDbConnections() async {
     _singletonConnection = null;
   }
 }
+
+Future<Connection> dbConnectionProvider() => _getSingletonConnection();
