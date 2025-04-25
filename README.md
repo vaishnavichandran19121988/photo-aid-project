@@ -26,7 +26,7 @@ An example application built with dart_frog
 - **Vaishnavi Ravichandran**
 - **Sharumathi**
 - **Roozbeh**
-- **Sui**
+- **Siu**
 - **Benard**
 
 ---
