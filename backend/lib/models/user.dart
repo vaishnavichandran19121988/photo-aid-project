@@ -15,9 +15,9 @@ class User {
   /// Expects columns: id, name, email, phone, user_type, profile_pic, last_known_location.
   factory User.fromRow(List<Object?> row) {
     return User(
-      id: row[0] as int,
-      name: row[1] as String,
-      email: row[2] as String,
+      id: row[0]! as int,
+      name: row[1]! as String,
+      email: row[2]! as String,
       phone: row[3] as String?,
       userType: row[4] as String?,
       profilePic: row[5] as String?,

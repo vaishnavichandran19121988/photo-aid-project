@@ -1,5 +1,5 @@
-import 'package:postgres/postgres.dart';
 import 'package:backend/models/session_model.dart';
+import 'package:postgres/postgres.dart';
 
 /// Encapsulates all database operations for the `sessions` table.
 /// All queries use parameter binding to prevent SQL injection.

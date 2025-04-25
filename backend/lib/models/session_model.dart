@@ -8,20 +8,19 @@ class SessionModel {
     required this.requesterId,
     required this.helperId,
     required this.timestamp,
-    this.location,
-    required this.status,
+    required this.status, this.location,
   });
 
   /// Construct a SessionModel from a database row.
   /// Expects columns in order: id, requester_id, helper_id, timestamp, location, status.
   factory SessionModel.fromRow(List<Object?> row) {
     return SessionModel(
-      id: row[0] as int,
-      requesterId: row[1] as int,
-      helperId: row[2] as int,
-      timestamp: row[3] as DateTime,
+      id: row[0]! as int,
+      requesterId: row[1]! as int,
+      helperId: row[2]! as int,
+      timestamp: row[3]! as DateTime,
       location: row[4] as String?,
-      status: row[5] as String,
+      status: row[5]! as String,
     );
   }
 

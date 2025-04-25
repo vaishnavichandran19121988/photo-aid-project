@@ -1,5 +1,5 @@
-import 'package:postgres/postgres.dart';
 import 'package:backend/models/user.dart';
+import 'package:postgres/postgres.dart';
 
 /// Encapsulates all database operations for the `users` table.
 /// Uses execute() for both reads and writes in postgres v3.

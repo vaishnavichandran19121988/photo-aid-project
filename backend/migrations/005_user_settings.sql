@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS user_settings (
+    user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+    online_status BOOLEAN DEFAULT TRUE
+);

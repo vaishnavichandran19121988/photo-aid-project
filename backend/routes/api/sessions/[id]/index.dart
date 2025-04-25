@@ -1,6 +1,7 @@
 import 'dart:io';
-import 'package:dart_frog/dart_frog.dart';
+
 import 'package:backend/repositories/session_repository.dart';
+import 'package:dart_frog/dart_frog.dart';
 
 /// Handle all requests to this route
 Future<Response> onRequest(RequestContext context, String id) async {

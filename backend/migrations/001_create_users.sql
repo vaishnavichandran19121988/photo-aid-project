@@ -8,3 +8,4 @@ CREATE TABLE IF NOT EXISTS users (
   last_known_location TEXT,
   password TEXT NOT NULL
 );
+
