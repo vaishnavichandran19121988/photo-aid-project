@@ -1,21 +1,26 @@
 import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
-import '../layouts/master_layout.dart';
+import 'package:photoaid/login.dart';
 
-class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({super.key});
 
+
+class Register extends StatefulWidget {
+   const Register({super.key});
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  State<Register> createState() => _RegisterPageState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterPageState extends State<Register> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  String baseUrl = 'http://localhost:8080'; // ✅ correct for Flutter Web
+   String baseUrl = 'http://localhost:8080';
+
+ 
 
   Future<void> _register() async {
     final name = _nameController.text.trim();
@@ -59,32 +64,45 @@ class _RegisterScreenState extends State<RegisterScreen> {
     ).showSnackBar(SnackBar(content: Text(message)));
   }
 
+
   @override
   Widget build(BuildContext context) {
-    return MasterLayout(
-      title: 'Register',
-      child: Column(
-        children: [
-          TextField(
+
+    return Scaffold(
+      
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Column(
+          children: [
+            Image(image: AssetImage('images/my_image.jpeg')),
+            TextField(
             controller: _nameController,
             decoration: const InputDecoration(labelText: 'Name'),
           ),
-          TextField(
-            controller: _emailController,
-            decoration: const InputDecoration(labelText: 'Email'),
-          ),
-          TextField(
-            controller: _passwordController,
-            decoration: const InputDecoration(labelText: 'Password'),
-            obscureText: true,
-          ),
-          const SizedBox(height: 20),
-          ElevatedButton(onPressed: _register, child: const Text('Register')),
-          TextButton(
-            onPressed: () => Navigator.pushNamed(context, '/login'),
-            child: const Text("Already have an account? Login"),
-          ),
-        ],
+            TextField(
+              controller: _emailController,
+              decoration: InputDecoration(labelText: 'Email'),
+            ),
+            SizedBox(height: 10),
+            TextField(
+              controller: _passwordController,
+              obscureText: true,
+              decoration: InputDecoration(labelText: 'Password'),
+            ),
+            SizedBox(height: 20),
+            ElevatedButton(
+              onPressed: _register,
+              child: Text('Register'),
+            ),
+            TextButton(
+            onPressed: () {
+              Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => LoginPhotoAid()),
+              );
+            },child: const Text("Already have an account? Login"),),
+          ],
+        ),
       ),
     );
   }

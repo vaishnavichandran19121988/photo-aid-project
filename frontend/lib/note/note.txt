@@ -1,0 +1,72 @@
+ return Center(child: Card(
+      margin: EdgeInsets.all(8),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('Marker Info', style: TextStyle(fontWeight: FontWeight.bold)),
+            SizedBox(height: 40),
+            Text('This is Brisbane'),
+            SizedBox(height: 40),
+            ElevatedButton.icon(
+              icon: Icon(Icons.navigation),
+              label: Text('Navigate'),
+              onPressed: () {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Navigating to Brisbane...')),
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    ),
+    );
+
+
+
+    @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: Text("Map", style: TextStyle(fontSize: 22))),
+      body: content(context),
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _navButton(label: 'Home', icon: Icons.home),
+            _navButton(label: 'Map', icon: Icons.map),
+            _navButton(label: 'Profile', icon: Icons.person),
+            _navButton(label: 'Setting', icon: Icons.settings),
+          ],
+        ),
+      ),
+    );
+  }
+  
+
+
+
+   Future<void> _registerUser() async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .createUserWithEmailAndPassword(
+        email: _emailController.text.trim(),
+        password: _passwordController.text,
+      );
+
+      // Success
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registered: ${userCredential.user?.email}')),
+      );
+    } catch (e) {
+      // Error
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Registration Failed: ${e.toString()}')),
+      );
+    }
+  }
