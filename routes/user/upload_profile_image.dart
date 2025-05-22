@@ -37,10 +37,17 @@ Future<void> handleUploadProfileImage(HttpRequest request) async {
 
     final imageBytes = base64Decode(imageBase64);
     final filePath = 'uploads/profile_images/$userId.jpg';
+
+    final uploadDir = Directory('uploads/profile_images');
+if (!await uploadDir.exists()) {
+  await uploadDir.create(recursive: true);
+}
     final file = File(filePath);
     await file.writeAsBytes(imageBytes);
 
  final imageUrl = 'https://fulfilling-creation-production.up.railway.app/$filePath';
+
+
 
     request.response
       ..statusCode = 200
