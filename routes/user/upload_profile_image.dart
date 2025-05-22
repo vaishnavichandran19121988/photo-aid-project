@@ -40,7 +40,7 @@ Future<void> handleUploadProfileImage(HttpRequest request) async {
     final file = File(filePath);
     await file.writeAsBytes(imageBytes);
 
-    final imageUrl = 'http://192.168.1.5:8080/$filePath';
+ final imageUrl = 'https://fulfilling-creation-production.up.railway.app/$filePath';
 
     request.response
       ..statusCode = 200
