@@ -246,15 +246,20 @@ Future<void> main() async {
       }
     } catch (e, st) {
       print('❌ Server Error: $e\n$st');
-      request.response
-        ..statusCode = 500
-        ..headers.contentType = ContentType.json
-        ..write(jsonEncode({
-          'success': false,
-          'message': 'Internal server error',
-          'error': e.toString()
-        }))
-        ..close();
+
+      try {
+        request.response
+          ..statusCode = 500
+          ..headers.contentType = ContentType.json
+          ..write(jsonEncode({
+            'success': false,
+            'message': 'Internal server error',
+            'error': e.toString()
+          }))
+          ..close();
+      } catch (_) {
+        print('⚠️ Response already closed — skipping second write.');
+      }
     }
   }
 }

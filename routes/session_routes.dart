@@ -4,6 +4,7 @@ import 'session/get_session_by_id.dart';
 import 'session/get_full_session_by_id.dart';
 import 'session/create_session.dart';
 import 'session/accept_session.dart';
+import 'session/session_set_mode.dart';
 
 import 'session/cancel_session.dart';
 import 'session/complete_session.dart';
@@ -49,6 +50,11 @@ class SessionRoutes {
 
     if (RegExp(r'^/api/sessions/\d+/cancel/?$').hasMatch(path) && method == 'PUT') {
       await handleCancelSession(request, userId);
+      return true;
+    }
+
+    if (RegExp(r'^/api/sessions/\d+/set_mode/?$').hasMatch(path) && method == 'POST') {
+      await handleSetNavigationMode(request, userId);
       return true;
     }
 

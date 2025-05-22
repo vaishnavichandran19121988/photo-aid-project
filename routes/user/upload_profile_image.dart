@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:backend/services/auth_service.dart';
 import 'package:backend/utils/jwt_utils.dart';
 
-Future<void> handleUpdateProfile(HttpRequest request) async {
+Future<void> handleUploadProfileImage(HttpRequest request) async {
   final authHeader = request.headers.value('authorization');
   if (authHeader == null || !authHeader.startsWith('Bearer ')) {
     request.response
@@ -17,7 +16,7 @@ Future<void> handleUpdateProfile(HttpRequest request) async {
   final userId = JwtUtils.getUserIdFromToken(token);
   if (userId == null) {
     request.response
-      ..statusCode = 401
+      ..statusCode = 403
       ..write(jsonEncode({'success': false, 'message': 'Invalid or expired token'}))
       ..close();
     return;
@@ -25,31 +24,30 @@ Future<void> handleUpdateProfile(HttpRequest request) async {
 
   try {
     final content = await utf8.decoder.bind(request).join();
-
-    // This assumes frontend sends a JSON payload, not multipart.
-    // To switch back to file uploads later, let me know.
-
     final data = jsonDecode(content);
-    final fullName = data['fullName'] as String?;
-    final email = data['email'] as String?;
-    final bio = data['bio'] as String?;
-    final profileImageUrl = data['profileImageUrl'] as String?; // optional
+    final imageBase64 = data['imageBase64'];
 
-    final result = await AuthService().updateProfile(
-      userId: userId,
-      fullName: fullName,
-      bio: bio,
-      email: email,
-      profileImageUrl: profileImageUrl,
-    );
+    if (imageBase64 == null) {
+      request.response
+        ..statusCode = 400
+        ..write(jsonEncode({'success': false, 'message': 'Missing imageBase64'}))
+        ..close();
+      return;
+    }
+
+    final imageBytes = base64Decode(imageBase64);
+    final filePath = 'uploads/profile_images/$userId.jpg';
+    final file = File(filePath);
+    await file.writeAsBytes(imageBytes);
+
+    final imageUrl = 'http://192.168.1.5:8080/$filePath';
 
     request.response
-      ..statusCode = result['success'] ? 200 : 400
+      ..statusCode = 200
       ..headers.contentType = ContentType.json
-      ..write(jsonEncode(result))
+      ..write(jsonEncode({'success': true, 'imageUrl': imageUrl}))
       ..close();
   } catch (e) {
-    print('❌ Error in updateProfile: $e');
     request.response
       ..statusCode = 500
       ..headers.contentType = ContentType.json

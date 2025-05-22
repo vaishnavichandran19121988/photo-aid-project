@@ -33,6 +33,7 @@ class Session {
 
   User? helper;
   User? requester;
+  final String navigationMode;
 
 
   /// Constructor
@@ -49,6 +50,7 @@ class Session {
     this.completedAt,
     this.helper,
     this.requester,
+    this.navigationMode = 'walking'
 
   });
 
@@ -66,6 +68,7 @@ class Session {
     DateTime? completedAt,
     User? helper,
     User? requester,
+    String? navigationMode
 
   }) {
     return Session(
@@ -81,6 +84,8 @@ class Session {
       completedAt: completedAt ?? this.completedAt,
       helper: helper ?? this.helper,
       requester: requester ?? this.requester,
+      navigationMode: navigationMode ?? this.navigationMode,
+
 
     );
   }
@@ -98,6 +103,7 @@ class Session {
       'created_at': createdAt?.toIso8601String(),
       'updated_at': updatedAt?.toIso8601String(),
       'completed_at': completedAt?.toIso8601String(),
+       'navigation_mode': navigationMode,
     };
 
     if (includeUsers) {
@@ -128,6 +134,7 @@ class Session {
       locationLat: (json['meeting_point_lat'] as num?)?.toDouble() ?? 0.0,
       locationLng: (json['meeting_point_lng'] as num?)?.toDouble() ?? 0.0,
       description: json['description'] as String?,
+      navigationMode: json['navigation_mode'] as String? ?? 'walking',
       createdAt: json['created_at'] != null
           ? (json['created_at'] is DateTime
               ? json['created_at'] as DateTime

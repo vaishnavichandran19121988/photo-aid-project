@@ -8,6 +8,7 @@ import 'user/nearby_helpers.dart';
 import 'user/nearby_tourists.dart';
 import 'user/update_fcm_token.dart';
 import 'user/clear_fcm_token.dart';
+import 'user/upload_profile_image.dart';
 import 'package:backend/services/auth_service.dart';
 
 
@@ -62,6 +63,10 @@ class UserRoutes {
       await handleGetUserProfile(request);
       return true;
     }
+    if (path == '/api/users/upload_profile_image' && method == 'POST') {
+      await handleUploadProfileImage(request);
+    }
+
 
     return false;
   }
